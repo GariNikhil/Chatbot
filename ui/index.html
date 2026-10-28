@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chatbot — workspace</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="layout" id="layout">
+    <aside class="sidebar" id="sidebar">
+      <header class="brand">
+        <h1>Chatbot</h1>
+        <span class="brand-sub">workspace</span>
+      </header>
+
+      <section class="panel">
+        <h2>Scene</h2>
+        <label class="field">
+          <span>Active scenario</span>
+          <select id="scenario-select">
+            <option value="">All scenarios</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Active scene</span>
+          <select id="scene-select">
+            <option value="">No scene (free chat)</option>
+          </select>
+        </label>
+        <p id="scene-note" class="note hidden"></p>
+        <div id="scene-participants-wrap" class="hidden">
+          <span class="field-label-small">Scene agents (instant save)</span>
+          <div id="scene-participants" class="participant-list"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Agents</h2>
+        <label class="check group-chat-toggle">
+          <input type="checkbox" id="group-chat-mode" />
+          <span>Group chat (multiple characters)</span>
+        </label>
+        <div id="agent-list" class="agent-list"></div>
+      </section>
+
+      <footer class="sidebar-footer">
+        <button id="settings-toggle" class="settings-btn">⚙&nbsp; Settings</button>
+        <div id="settings-menu" class="settings-menu hidden" role="menu">
+          <button type="button" class="settings-item" data-action="scenarios">📖 Scenarios</button>
+          <button type="button" class="settings-item" data-action="scenes">🎬 Scenes</button>
+          <button type="button" class="settings-item" data-action="characters">👥 Characters</button>
+          <button type="button" class="settings-item" data-action="cards">🃏 World Cards</button>
+          <button type="button" class="settings-item" data-action="memories">🧠 Memories</button>
+          <button type="button" class="settings-item" data-action="theme">🎨 Theme</button>
+          <button type="button" class="settings-item" data-action="help">❓ Help</button>
+          <div class="settings-sep" role="separator"></div>
+          <button type="button" class="settings-item danger" data-action="shutdown">⏻ End session</button>
+        </div>
+      </footer>
+    </aside>
+
+    <div id="sidebar-backdrop" class="sidebar-backdrop hidden"></div>
+
+    <main class="chat">
+      <header class="chat-header">
+        <div class="chat-heading">
+          <button id="sidebar-toggle" class="sidebar-toggle" type="button"
+                  aria-label="Hide sidebar" aria-controls="sidebar" aria-expanded="true">☰</button>
+          <div class="chat-title">
+            <span id="chat-agent-name">Select an agent</span>
+            <span id="chat-agent-meta" class="meta"></span>
+          </div>
+        </div>
+        <div class="chat-context">
+          <span id="chat-scenario-badge" class="badge story hidden"></span>
+          <span id="chat-scene-badge" class="badge hidden"></span>
+          <span id="chat-cards-badge" class="badge alt hidden"></span>
+          <span id="chat-group-badge" class="badge group hidden"></span>
+        </div>
+      </header>
+
+      <div id="chapter-bar" class="chapter-bar hidden">
+        <span id="chapter-story" class="chapter-story"></span>
+        <label class="chapter-picker">
+          <span>Chapter</span>
+          <select id="chapter-select" aria-label="Switch chapter"></select>
+        </label>
+      </div>
+
+      <div id="messages" class="messages"></div>
+
+      <form id="composer" class="composer">
+        <select id="model-select" class="model-select" disabled>
+          <option value="">No model</option>
+        </select>
+        <input id="message-input" type="text" autocomplete="off"
+               placeholder="Type a message…" disabled />
+        <button id="send-button" type="submit" class="btn primary" disabled>Send</button>
+      </form>
+      <p id="chat-status" class="status"></p>
+    </main>
+  </div>
+
+  <!-- Character form modal (T-5.1, T-5.4) -->
+  <div id="character-modal" class="modal hidden">
+    <div class="modal-card">
+      <header class="modal-header">
+        <h3 id="character-modal-title">New character</h3>
+        <button id="character-modal-close" class="btn ghost" type="button">✕</button>
+      </header>      <form id="character-form">
+        <label class="field">
+          <span>Nickname *</span>
+          <input name="nickname" type="text" required placeholder="e.g. Sam" />
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Gender *</span>
+            <input name="gender" type="text" required placeholder="female / male / nonbinary…" />
+          </label>
+          <label class="field">
+            <span>Age * (18–120)</span>
+            <input name="age" type="number" min="18" max="120" step="1" required />
+          </label>
+        </div>
+        <label class="field">
+          <span>Personality *</span>
+          <textarea name="personality" rows="3" required
+                    placeholder="Traits and temperament"></textarea>
+        </label>
+        <label class="field">
+          <span>Appearance *</span>
+          <textarea name="appearance" rows="2" required
+                    placeholder="Physical description"></textarea>
+        </label>
+        <div class="field">
+          <span>Tags</span>
+          <p class="field-hint">Optional structured traits. Saved separately from the descriptions above.</p>
+          <div id="character-tags" class="tag-picker"></div>
+        </div>
+        <label class="field">
+          <span>Role</span>
+          <input name="role" type="text" list="role-options" placeholder="e.g. parent, friend, sister_in_law" />
+          <datalist id="role-options">
+            <option value="parent"></option>
+            <option value="sibling"></option>
+            <option value="friend"></option>
+            <option value="user"></option>
+            <option value="character"></option>
+          </datalist>
+        </label>
+        <label class="field">
+          <span>System prompt</span>
+          <textarea name="system_prompt" rows="4"
+                    placeholder="Leave empty to auto-generate (&quot;You are <nickname>…&quot;)"></textarea>
+        </label>
+        <label class="check">
+          <input name="memory_enabled" type="checkbox" checked />
+          <span>Enable durable memory</span>
+        </label>
+        <p id="character-form-error" class="form-error hidden"></p>
+        <footer class="modal-footer">
+          <button type="button" id="character-cancel" class="btn ghost">Cancel</button>
+          <button type="submit" id="character-save" class="btn primary">Save character</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scene form modal -->
+  <div id="scene-modal" class="modal hidden">
+    <div class="modal-card">
+      <header class="modal-header">
+        <h3 id="scene-modal-title">New scene</h3>
+        <button id="scene-modal-close" class="btn ghost" type="button">✕</button>
+      </header>
+      <form id="scene-form">
+        <label class="field">
+          <span>Name *</span>
+          <input name="name" type="text" required placeholder="e.g. Weekend Trip" />
+        </label>
+        <label class="field">
+          <span>Description</span>
+          <textarea name="description" rows="2"
+                    placeholder="Mood and setting (1–2 sentences)"></textarea>
+        </label>
+        <label class="field">
+          <span>Scenario</span>
+          <select name="scenario">
+            <option value="">(standalone scene)</option>
+          </select>
+          <p class="field-hint">Scenes linked to a scenario share its story foundation.</p>
+        </label>
+        <div class="field">
+          <span>Tags</span>
+          <p class="field-hint">Genre, setting, mood and roleplay format for this scene.</p>
+          <div id="scene-tags" class="tag-picker"></div>
+        </div>
+        <label class="field">
+          <span>Location</span>
+          <input name="location" type="text" placeholder="e.g. Lakeside Cabin" />
+        </label>
+        <label class="field">
+          <span>World card</span>
+          <select name="world_card">
+            <option value="">(none)</option>
+          </select>
+        </label>
+        <div class="field">
+          <span>Agents present *</span>
+          <div id="scene-form-participants" class="participant-list"></div>
+        </div>
+        <p id="scene-form-error" class="form-error hidden"></p>
+        <footer class="modal-footer">
+          <button type="button" id="scene-cancel" class="btn ghost">Cancel</button>
+          <button type="submit" id="scene-save" class="btn primary">Save scene</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scenario form modal (Settings ▸ Scenarios ▸ New/Edit) -->
+  <div id="scenario-modal" class="modal hidden">
+    <div class="modal-card" style="width:560px;">
+      <header class="modal-header">
+        <h3 id="scenario-modal-title">New scenario</h3>
+        <button id="scenario-modal-close" class="btn ghost" type="button">✕</button>
+      </header>
+      <form id="scenario-form">
+        <label class="field">
+          <span>Name *</span>
+          <input name="name" type="text" required placeholder="e.g. The Arranged Marriage" />
+        </label>
+        <label class="field">
+          <span>Overall premise</span>
+          <textarea name="description" rows="3"
+                    placeholder="The whole story in 2–4 sentences: premise, main relationship, and direction"></textarea>
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Genre</span>
+            <input name="genre" type="text" placeholder="e.g. Romance · Drama" />
+          </label>
+          <label class="field">
+            <span>Tone</span>
+            <input name="tone" type="text" placeholder="e.g. Warm, tense, slow-burn" />
+          </label>
+        </div>
+        <label class="field">
+          <span>Themes</span>
+          <input name="themes" type="text" placeholder="e.g. Duty vs. desire, family expectations" />
+        </label>
+        <label class="field">
+          <span>Premise &amp; background</span>
+          <textarea name="premise" rows="2"
+                    placeholder="How the story begins and what led here"></textarea>
+        </label>
+        <label class="field">
+          <span>Relationship dynamics</span>
+          <textarea name="relationship_dynamics" rows="2"
+                    placeholder="How the main characters relate and how that relationship evolves"></textarea>
+        </label>
+        <label class="field">
+          <span>Central conflict</span>
+          <textarea name="central_conflict" rows="2"
+                    placeholder="The core tension driving the story"></textarea>
+        </label>
+        <label class="field">
+          <span>Narrative direction</span>
+          <textarea name="narrative_direction" rows="2"
+                    placeholder="Where the story is heading and what should not be forgotten"></textarea>
+        </label>
+        <label class="field">
+          <span>Important background events</span>
+          <textarea name="background" rows="2"
+                    placeholder="Events and history that remain true across scenes"></textarea>
+        </label>
+        <label class="field">
+          <span>Long-term objectives</span>
+          <textarea name="long_term_objectives" rows="2"
+                    placeholder="What the characters are working toward"></textarea>
+        </label>
+        <label class="field">
+          <span>Opening message <span class="field-hint">(optional)</span></span>
+          <textarea name="opening_message" rows="3"
+                    placeholder="Optional scene-setting text for the first chapter"></textarea>
+        </label>
+        <div class="field">
+          <span>Scenario tags</span>
+          <p class="field-hint">Story-wide genre, themes, setting, and relationship dynamics.
+            Scene tags stay on each scene.</p>
+          <div id="scenario-tags" class="tag-picker"></div>
+        </div>
+        <label class="field">
+          <span>World card</span>
+          <select name="world_card">
+            <option value="">(none)</option>
+          </select>
+        </label>
+        <div class="field">
+          <span>Characters in this story</span>
+          <p class="field-hint">Optional cast list for the prompt. Each scene still chooses who is present.</p>
+          <div id="scenario-form-participants" class="participant-list"></div>
+        </div>
+        <div class="field">
+          <span>Chapters in this story</span>
+          <p class="field-hint">All scenes selected here belong to this scenario. Use
+            <em>Include all scenes</em> to link every existing scene; new scenes can be linked later.
+            While chatting you can switch chapters (for example Living Room → Kitchen) from the
+            bar above the messages.</p>
+          <label class="check">
+            <input type="checkbox" id="scenario-scenes-all" />
+            <span>Include all scenes</span>
+          </label>
+          <div id="scenario-form-scenes" class="participant-list"></div>
+        </div>
+        <p id="scenario-form-error" class="form-error hidden"></p>
+        <footer class="modal-footer">
+          <button type="button" id="scenario-cancel" class="btn ghost">Cancel</button>
+          <button type="submit" id="scenario-save" class="btn primary">Save scenario</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- Help modal (Settings ▸ Help) -->
+  <div id="help-modal" class="modal hidden">
+    <div class="modal-card help-card">
+      <header class="modal-header">
+        <h3>Help — Chatbot</h3>
+        <button id="help-modal-close" class="btn ghost" type="button">✕</button>
+      </header>
+      <div class="help-body">
+        <section class="help-section">
+          <h4>Full Documentation</h4>
+          <ul>
+            <li><strong><a href="docs/SETUP_AND_USAGE_GUIDE.md" target="_blank" rel="noopener">Setup &amp; Usage Guide</a></strong> — Complete installation, configuration, and usage instructions.</li>
+            <li><a href="readme.md" target="_blank" rel="noopener">README</a> — Quick overview and project structure.</li>
+            <li><a href="run.md" target="_blank" rel="noopener">Run Instructions</a> — Quick start commands.</li>
+          </ul>
+        </section>
+        <section class="help-section">
+          <h4>Quick start</h4>
+          <ul>
+            <li>Double-click <code>start.bat</code> — starts LM Studio + this server and opens the UI (if using LM Studio).</li>
+            <li><strong>Settings ▸ End session</strong> stops the server from the UI.
+                <code>stop.bat</code> does the same from the file manager.</li>
+            <li>Manual: Start your LLM provider (LM Studio or Ollama), configure <code>LLM_PROVIDER</code> in <code>.env</code>, then <code>cd server && npm start</code>, open <code>http://localhost:3001</code>.</li>
+          </ul>
+        </section>
+        <section class="help-section">
+          <h4>Chatting with agents</h4>
+          <ul>
+            <li>Pick an <strong>Agent</strong>, optionally a <strong>Scene</strong> — only scene
+                participants stay selectable (toggle them in the Scene panel). A scene linked to a
+                <strong>Scenario</strong> also receives that story's persistent foundation.</li>
+            <li>Turn on <strong>Group chat</strong> in the Agents panel to talk to every AI
+                participant of the current scene at once. Each scene has one shared room and
+                timeline; characters can reply to you and to each other.</li>
+            <li>Toggle <strong>World Cards</strong> via <strong>Settings ▸ World Cards</strong> to change tone/setting for new messages.</li>
+            <li>Pick a model in the composer dropdown; a red banner means LM Studio is offline.</li>
+            <li>Use the <strong>☰</strong> button in the header to hide/show the sidebar. The
+                choice is remembered; on a phone the sidebar opens as a drawer.</li>
+          </ul>
+        </section>
+        <section class="help-section">
+          <h4>Tags</h4>
+          <ul>
+            <li>Character, scenario, scene, and world-card forms include searchable tag pickers
+                backed by <code>house/tags.yaml</code>.</li>
+            <li>Scenario tags describe the overall story; scene tags describe the current chapter.
+                They are saved separately and injected at the correct level.</li>
+            <li>Selected tags are saved as stable ids (<code>tag_selections</code>) alongside your
+                written descriptions; clearing a tag never edits the text fields.</li>
+            <li>Tags relevant to each entity are added to the model's system prompt. Deleted or
+                non-applicable tags are preserved in the YAML and shown as removable
+                <em>Unavailable</em> chips.</li>
+          </ul>
+        </section>
+        <section class="help-section">
+          <h4>LLM Provider</h4>
+          <ul>
+            <li><strong>LM Studio</strong> (default, port 1234): <code>lms server start</code>, <code>lms load qwen3-4b</code>, <code>lms server status</code></li>
+            <li><strong>Ollama</strong> (port 11434): <code>ollama serve</code>, <code>ollama pull qwen3:4b</code>, <code>ollama list</code></li>
+            <li>Set <code>LLM_PROVIDER=ollama</code> in <code>.env</code> to use Ollama. Configure with <code>OLLAMA_BASE_URL</code> or <code>LLM_BASE_URL</code>.</li>
+          </ul>
+        </section>
+        <section class="help-section">
+          <h4>Scenarios &amp; scenes</h4>
+          <ul>
+            <li>A <strong>Scenario</strong> is the whole story: premise, relationships, genre,
+                and world facts that persist across chapters.</li>
+            <li>A <strong>Scene</strong> is one chapter: its own location, situation, and the
+                characters present right now.</li>
+            <li>Create a scenario in <strong>Settings ▸ Scenarios</strong>, then link scenes to it
+                there (tick <em>Include all scenes</em> or pick individual chapters) or per scene in
+                <strong>Settings ▸ Scenes</strong>. Scenes without a scenario remain standalone.</li>
+            <li>The Scene selector groups chapters under their scenario. While chatting, the chapter
+                bar above the messages lets you jump between the chapters of the current story
+                (for example Living Room → Kitchen). Switching chapters changes the immediate
+                context but keeps the story foundation, characters, and world cards.</li>
+            <li>Exchanges for memory-enabled characters are saved as Markdown under
+                <code>Chatbot/Memories/scenarios/&lt;story&gt;/&lt;scene&gt;/&lt;character&gt;/</code>
+                (or <code>standalone/</code> for scenes without a story) in your Obsidian
+                vault, and replayed only in the same scene. Older
+                <code>Memories/&lt;character&gt;/</code> files are still shown and read.</li>
+          </ul>
+        </section>
+        <section class="help-section">
+          <h4>Server status</h4>
+          <p id="help-status" class="help-status">Checking…</p>
+        </section>
+      </div>
+      <footer class="modal-footer">
+        <button type="button" id="help-close" class="btn primary">Close</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Characters modal (Settings ▸ Characters) -->
+  <div id="characters-modal" class="modal hidden">
+    <div class="modal-card">
+      <header class="modal-header">
+        <h3>Characters</h3>
+        <button id="characters-modal-close" class="btn ghost" type="button">✕</button>
+      </header>
+      <div class="modal-body" style="display:flex;flex-direction:column;gap:10px;">
+        <button id="new-character" class="btn primary wide">+ New character</button>
+        <div id="manage-list" class="manage-list"></div>
+        <p class="note" style="margin-top:8px;">Open a character to edit; click Delete to remove it permanently.</p>
+      </div>
+      <footer class="modal-footer">
+        <button type="button" id="characters-modal-done" class="btn primary">Done</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Scenarios modal (Settings ▸ Scenarios) -->
+  <div id="scenarios-modal" class="modal hidden">
+    <div class="modal-card">
+      <header class="modal-header">
+        <h3>Scenarios</h3>
+        <button id="scenarios-modal-close" class="btn ghost" type="button">✕</button>
+      </header>
+      <div class="modal-body" style="display:flex;flex-direction:column;gap:10px;">
+        <button id="new-scenario" class="btn primary wide">+ New scenario</button>
+        <div id="scenario-list" class="manage-list"></div>
+        <p class="note" style="margin-top:8px;">A scenario is the whole story. Link scenes to it in
+          <strong>Settings ▸ Scenes</strong>; every linked scene keeps the scenario's premise and
+          relationships.</p>
+      </div>
+      <footer class="modal-footer">
+        <button type="button" id="scenarios-modal-done" class="btn primary">Done</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Scenes modal (Settings ▸ Scenes) -->
+  <div id="scenes-modal" class="modal hidden">
+    <div class="modal-card">
+      <header class="modal-header">
+        <h3>Scenes</h3>
+        <button id="scenes-modal-close" class="btn ghost" type="button">✕</button>
+      </header>
+      <div class="modal-body" style="display:flex;flex-direction:column;gap:10px;">
+        <button id="new-scene" class="btn primary wide">+ New scene</button>
+        <div id="scene-list" class="manage-list"></div>
+        <p class="note" style="margin-top:8px;">Scenes are chapters: create, edit, or delete them here.
+          Link a scene to a <strong>Scenario</strong> to share its story foundation. Pick the active
+          scene from the <strong>Scene</strong> panel on the dashboard.</p>
+      </div>
+      <footer class="modal-footer">
+        <button type="button" id="scenes-modal-done" class="btn primary">Done</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- World Cards modal (Settings ▸ World Cards) -->
+  <div id="cards-modal" class="modal hidden">
+    <div class="modal-card" style="width:520px;">
+      <header class="modal-header">
+        <h3>World Cards</h3>
+        <button id="cards-modal-close" class="btn ghost" type="button">✕</button>
+      </header>
+      <div class="modal-body">
+        <button id="new-card" class="btn primary wide" style="margin-bottom:10px;">+ New world card</button>
+        <div id="card-list" class="card-list"></div>
+        <p class="note" style="margin-top:8px;">Toggle cards on/off. Active cards are saved and applied to new messages. Use Edit to change a card's details or tags, or Delete to remove it.</p>
+      </div>
+      <footer class="modal-footer">
+        <button type="button" id="cards-modal-done" class="btn primary">Done</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- World Card form modal (Settings ▸ World Cards ▸ New world card) -->
+  <div id="world-card-modal" class="modal hidden">
+    <div class="modal-card">
+      <header class="modal-header">
+        <h3 id="world-card-modal-title">New world card</h3>
+        <button id="world-card-modal-close" class="btn ghost" type="button">✕</button>
+      </header>
+      <form id="world-card-form">
+        <label class="field">
+          <span>Name *</span>
+          <input name="name" type="text" required placeholder="e.g. Rainy Evening" />
+        </label>
+        <label class="field">
+          <span>Type</span>
+          <select name="type">
+            <option value="world">World</option>
+            <option value="location_shift">Location Shift</option>
+            <option value="genre">Genre</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Description *</span>
+          <textarea name="description" rows="3" required
+                    placeholder="Mood or effect on the setting"></textarea>
+        </label>
+        <div class="field">
+          <span>Tags</span>
+          <p class="field-hint">World-building, genre, style and story situation tags.</p>
+          <div id="card-tags" class="tag-picker"></div>
+        </div>
+        <label class="check">
+          <input name="active" type="checkbox" />
+          <span>Active by default</span>
+        </label>
+        <p id="world-card-form-error" class="form-error hidden"></p>
+        <footer class="modal-footer">
+          <button type="button" id="world-card-cancel" class="btn ghost">Cancel</button>
+          <button type="submit" id="world-card-save" class="btn primary">Save card</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- Memories modal (Settings ▸ Memories) -->
+  <div id="memories-modal" class="modal hidden">
+    <div class="modal-card" style="width:640px;">
+      <header class="modal-header">
+        <h3>Memories</h3>
+        <button id="memories-modal-close" class="btn ghost" type="button">✕</button>
+      </header>
+      <div class="modal-body" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="mem-header">
+          <select id="memory-scenario-select" class="memory-filter">
+            <option value="">All stories</option>
+          </select>
+          <button id="memories-refresh" class="icon-btn" type="button" title="Refresh memories">↻</button>
+        </div>
+        <div id="memory-list" class="memory-list"></div>
+      </div>
+      <footer class="modal-footer">
+        <button type="button" id="memories-modal-done" class="btn primary">Done</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Theme modal (Settings ▸ Theme) -->
+  <div id="theme-modal" class="modal hidden">
+    <div class="modal-card" style="width:420px;">
+      <header class="modal-header">
+        <h3>Theme</h3>
+        <button id="theme-modal-close" class="btn ghost" type="button">✕</button>
+      </header>
+      <div class="modal-body" style="display:flex;flex-direction:column;gap:10px;">
+        <p style="margin:0;color:var(--text-dim);font-size:13px;">Choose your preferred appearance.</p>
+        <div class="theme-options" style="display:flex;flex-direction:column;gap:8px;">
+          <button type="button" class="theme-option" data-theme-value="light">
+            <span style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:18px;">☀️</span>
+              <span style="display:flex;flex-direction:column;align-items:flex-start;">
+                <strong>Light</strong>
+                <span style="font-size:12px;color:var(--text-dim);">Always use light mode</span>
+              </span>
+            </span>
+            <span class="theme-check">✓</span>
+          </button>
+          <button type="button" class="theme-option" data-theme-value="dark">
+            <span style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:18px;">🌙</span>
+              <span style="display:flex;flex-direction:column;align-items:flex-start;">
+                <strong>Dark</strong>
+                <span style="font-size:12px;color:var(--text-dim);">Always use dark mode</span>
+              </span>
+            </span>
+            <span class="theme-check">✓</span>
+          </button>
+          <button type="button" class="theme-option" data-theme-value="system">
+            <span style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:18px;">💻</span>
+              <span style="display:flex;flex-direction:column;align-items:flex-start;">
+                <strong>System</strong>
+                <span style="font-size:12px;color:var(--text-dim);">Follow system preference</span>
+              </span>
+            </span>
+            <span class="theme-check">✓</span>
+          </button>
+        </div>
+      </div>
+      <footer class="modal-footer">
+        <button type="button" id="theme-modal-done" class="btn primary">Done</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Theme modal (Settings ▸ Theme) -->
+  <div id="theme-modal" class="modal hidden">
+    <div class="modal-card" style="width:420px;">
+      <header class="modal-header">
+        <h3>Theme</h3>
+        <button id="theme-modal-close" class="btn ghost" type="button">✕</button>
+      </header>
+      <div class="modal-body" style="display:flex;flex-direction:column;gap:10px;">
+        <p style="margin:0;color:var(--text-dim);font-size:13px;">Choose your preferred appearance.</p>
+        <div class="theme-options" style="display:flex;flex-direction:column;gap:8px;">
+          <button type="button" class="theme-option" data-theme-value="light">
+            <span style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:18px;">☀️</span>
+              <span style="display:flex;flex-direction:column;align-items:flex-start;">
+                <strong>Light</strong>
+                <span style="font-size:12px;color:var(--text-dim);">Always use light mode</span>
+              </span>
+            </span>
+            <span class="theme-check">✓</span>
+          </button>
+          <button type="button" class="theme-option" data-theme-value="dark">
+            <span style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:18px;">🌙</span>
+              <span style="display:flex;flex-direction:column;align-items:flex-start;">
+                <strong>Dark</strong>
+                <span style="font-size:12px;color:var(--text-dim);">Always use dark mode</span>
+              </span>
+            </span>
+            <span class="theme-check">✓</span>
+          </button>
+          <button type="button" class="theme-option" data-theme-value="system">
+            <span style="display:flex;align-items:center;gap:10px;">
+              <span style="font-size:18px;">💻</span>
+              <span style="display:flex;flex-direction:column;align-items:flex-start;">
+                <strong>System</strong>
+                <span style="font-size:12px;color:var(--text-dim);">Follow system preference</span>
+              </span>
+            </span>
+            <span class="theme-check">✓</span>
+          </button>
+        </div>
+      </div>
+      <footer class="modal-footer">
+        <button type="button" id="theme-modal-done" class="btn primary">Done</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Shown after Settings ▸ End session stops the server -->
+  <div id="shutdown-overlay" class="shutdown-overlay hidden" role="alertdialog"
+       aria-modal="true" aria-labelledby="shutdown-title">
+    <div class="shutdown-card">
+      <h2 id="shutdown-title">Chatbot has stopped</h2>
+      <p>The server is no longer running.</p>
+      <p class="shutdown-hint">Start it again with <code>start.bat</code>. You can close this tab.</p>
+    </div>
+  </div>
+
+  <script src="app.js?v=1"></script>
+</body>
+</html>
