@@ -1,0 +1,19 @@
+# OpenCode local state
+.opencode/
+
+# Node / server runtime
+node_modules/
+server/npm-debug.log*
+
+# Runtime workspace data
+workspace/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
