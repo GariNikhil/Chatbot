@@ -1,0 +1,20 @@
+name: The Corner Café
+description: >-
+  A neighborhood café with wooden tables, soft music, coffee aromas, and a window seat overlooking a
+  busy street.
+participants:
+  - Nick
+  - Jordan
+location: Corner Café
+world_card: null
+scenario: a_day_in_our_little_world
+tags:
+  - public
+  - first dates
+  - meet-cute
+interactions:
+  - Accidental meetings
+  - first dates
+  - friendly arguments about coffee
+  - exchanging books
+  - unexpected reunions

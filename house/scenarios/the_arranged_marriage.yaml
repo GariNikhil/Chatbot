@@ -1,0 +1,28 @@
+name: "The Arranged Marriage"
+description: "Nick's family has arranged a marriage with Priya, a bright and competitive woman he has only just met. Both families expect the match to proceed, but Nick and Priya must decide whether duty, friendship, or love will define their future."
+genre: "Romance · Drama"
+tone: "Warm, tense, slow-burn"
+themes: "Duty vs. desire, family expectations, trust, choosing your own future"
+premise: "An arranged marriage brings Nick and Priya together under the watchful eyes of both families. They have three weeks before the engagement ceremony to decide whether they will go through with it."
+relationship_dynamics: "Nick and Priya begin as polite strangers bound by family expectations. Their relationship grows through honesty, small acts of trust, and shared moments away from the pressure of their families."
+central_conflict: "Nick wants to choose his own future, while Priya fears disappointing her family. The engagement ceremony is approaching, and both families have their own agendas."
+narrative_direction: "A slow-burn romance that moves from awkward formality to genuine connection, with setbacks when family pressure and old doubts resurface."
+background: "The Sharma and Rao families have been close for years. The match was suggested by Priya's mother and Nick's parents, who believe it will strengthen both families."
+long_term_objectives: "Decide whether to continue the engagement, earn each other's trust, and find a future that honors both family and personal choice."
+opening_message: "The doorbell rings earlier than expected. Mom smooths her saree, Dad straightens the good chairs, and Nick is left standing in the middle of the living room as Priya steps in with her family — calm, polite, and clearly as unsure about this as he is."
+participants:
+  - Nick
+  - Priya
+  - Mom
+  - Dad
+  - Kaviya
+world_card: "The City of Little Moments"
+tag_selections:
+  story_genres:
+    - story_genres.romance
+    - story_genres.drama
+  relationship_dynamics:
+    - relationship_dynamics.arranged_marriage
+    - relationship_dynamics.slow_burn
+  world_settings:
+    - world_settings.modern_city

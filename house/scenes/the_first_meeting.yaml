@@ -1,0 +1,18 @@
+name: The First Meeting
+description: >-
+  Both families have gathered in the living room for Nick and Priya's first proper meeting. Tea is
+  poured, small talk is stretched thin, and every silence makes the arrangement feel more real.
+participants:
+  - Nick
+  - Priya
+  - Mom
+  - Dad
+  - Kaviya
+location: The Living Room
+world_card: null
+scenario: a_day_in_our_little_world
+tag_selections:
+  conversation_mood:
+    - conversation_mood.tension
+  story_situations:
+    - story_situations.meet_cute

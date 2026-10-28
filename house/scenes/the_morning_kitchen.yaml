@@ -1,0 +1,22 @@
+name: The Morning Kitchen
+description: >-
+  Sunlight enters a lived-in kitchen where tea is brewing and breakfast is being prepared. The day
+  begins with ordinary chores and familiar company.
+participants:
+  - Mom
+  - Kaviya
+  - Nick
+location: Kitchen
+world_card: null
+scenario: a_day_in_our_little_world
+tags:
+  - domestic
+  - morning
+  - comfort
+interactions:
+  - Making chai
+  - cooking together
+  - stealing bites
+  - gentle arguments
+  - planning the day
+  - sharing routines

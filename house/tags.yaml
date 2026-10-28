@@ -1,0 +1,250 @@
+# Chatbot tag library.
+#
+# This is the single canonical tag source for the app (GET /tags). It is derived
+# from prompts/CrushOn_AI_Tag_List_Guide.md; edit tags here, not in the UI.
+#
+# Each category has:
+#   id          stable category id (used in tag_selections)
+#   label       display label
+#   applies_to  one or more of: character, scene, scenario, card
+#   multiple    true = multi-select, false = single-select (default true)
+#   tags        list of { id, label }; stored ids are "<category>.<tag>".
+categories:
+  - id: personality
+    label: Personality
+    applies_to: [character]
+    tags:
+      - { id: tsundere, label: Tsundere }
+      - { id: yandere, label: Yandere }
+      - { id: kuudere, label: Kuudere }
+      - { id: dandere, label: Dandere }
+      - { id: deredere, label: Deredere }
+      - { id: shy, label: Shy }
+      - { id: confident, label: Confident }
+      - { id: dominant, label: Dominant }
+      - { id: submissive, label: Submissive }
+      - { id: possessive, label: Possessive }
+      - { id: jealous, label: Jealous }
+      - { id: sarcastic, label: Sarcastic }
+      - { id: playful, label: Playful }
+      - { id: teasing, label: Teasing }
+      - { id: flirty, label: Flirty }
+      - { id: sweet, label: Sweet }
+      - { id: cold, label: Cold }
+      - { id: stoic, label: Stoic }
+      - { id: mysterious, label: Mysterious }
+      - { id: manipulative, label: Manipulative }
+
+  - id: emotional_traits
+    label: Emotional traits
+    applies_to: [character]
+    tags:
+      - { id: caring, label: Caring }
+      - { id: protective, label: Protective }
+      - { id: affectionate, label: Affectionate }
+      - { id: gentle, label: Gentle }
+      - { id: wholesome, label: Wholesome }
+      - { id: loyal, label: Loyal }
+      - { id: clingy, label: Clingy }
+      - { id: obsessive, label: Obsessive }
+      - { id: vulnerable, label: Vulnerable }
+      - { id: insecure, label: Insecure }
+      - { id: hot_tempered, label: Hot-Tempered }
+      - { id: romantic, label: Romantic }
+      - { id: lonely, label: Lonely }
+      - { id: secretive, label: Secretive }
+      - { id: overprotective, label: Overprotective }
+
+  - id: roles
+    label: Role
+    applies_to: [character]
+    multiple: false
+    tags:
+      - { id: girlfriend, label: Girlfriend }
+      - { id: boyfriend, label: Boyfriend }
+      - { id: wife, label: Wife }
+      - { id: husband, label: Husband }
+      - { id: best_friend, label: Best Friend }
+      - { id: roommate, label: Roommate }
+      - { id: classmate, label: Classmate }
+      - { id: colleague, label: Colleague }
+      - { id: boss, label: Boss }
+      - { id: teacher, label: Teacher }
+      - { id: student, label: Student }
+      - { id: stranger, label: Stranger }
+      - { id: neighbor, label: Neighbor }
+      - { id: bodyguard, label: Bodyguard }
+      - { id: royalty, label: Royalty }
+      - { id: vampire, label: Vampire }
+      - { id: demon, label: Demon }
+      - { id: angel, label: Angel }
+      - { id: werewolf, label: Werewolf }
+      - { id: detective, label: Detective }
+
+  - id: relationship_dynamics
+    label: Relationship dynamics
+    applies_to: [character, scene, scenario]
+    tags:
+      - { id: friends_to_lovers, label: Friends to Lovers }
+      - { id: enemies_to_lovers, label: Enemies to Lovers }
+      - { id: slow_burn, label: Slow Burn }
+      - { id: forbidden_love, label: Forbidden Love }
+      - { id: arranged_marriage, label: Arranged Marriage }
+      - { id: fake_dating, label: Fake Dating }
+      - { id: childhood_friends, label: Childhood Friends }
+      - { id: love_triangle, label: Love Triangle }
+      - { id: secret_crush, label: Secret Crush }
+      - { id: unrequited_love, label: Unrequited Love }
+      - { id: second_chance, label: Second Chance }
+      - { id: soulmates, label: Soulmates }
+      - { id: rivals, label: Rivals }
+      - { id: established_relationship, label: Established Relationship }
+
+  - id: hair_eyes
+    label: Hair & eyes
+    applies_to: [character]
+    tags:
+      - { id: long_hair, label: Long Hair }
+      - { id: short_hair, label: Short Hair }
+      - { id: black_hair, label: Black Hair }
+      - { id: white_hair, label: White Hair }
+      - { id: blonde, label: Blonde }
+      - { id: redhead, label: Redhead }
+      - { id: blue_hair, label: Blue Hair }
+      - { id: pink_hair, label: Pink Hair }
+      - { id: red_eyes, label: Red Eyes }
+      - { id: blue_eyes, label: Blue Eyes }
+      - { id: glasses, label: Glasses }
+
+  - id: character_types
+    label: Character type
+    applies_to: [character]
+    tags:
+      - { id: anime_girl, label: Anime Girl }
+      - { id: anime_boy, label: Anime Boy }
+      - { id: furry, label: Furry }
+      - { id: monster_girl, label: Monster Girl }
+      - { id: elf, label: Elf }
+      - { id: demon, label: Demon }
+      - { id: angel, label: Angel }
+      - { id: vampire, label: Vampire }
+      - { id: werewolf, label: Werewolf }
+      - { id: android, label: Android }
+      - { id: robot, label: Robot }
+      - { id: alien, label: Alien }
+      - { id: kemonomimi, label: Kemonomimi }
+      - { id: hybrid, label: Hybrid }
+      - { id: fantasy_creature, label: Fantasy Creature }
+
+  - id: style
+    label: Style & aesthetic
+    applies_to: [character, card]
+    tags:
+      - { id: gothic, label: Gothic }
+      - { id: goth, label: Goth }
+      - { id: punk, label: Punk }
+      - { id: gothic_lolita, label: Gothic Lolita }
+      - { id: cute, label: Cute }
+      - { id: elegant, label: Elegant }
+      - { id: mysterious, label: Mysterious }
+      - { id: elegant_villain, label: Elegant Villain }
+      - { id: dark_academia, label: Dark Academia }
+      - { id: cyberpunk_style, label: Cyberpunk Style }
+      - { id: traditional_clothing, label: Traditional Clothing }
+      - { id: military_uniform, label: Military Uniform }
+
+  - id: story_genres
+    label: Genre
+    applies_to: [scene, scenario, card]
+    tags:
+      - { id: anime, label: Anime }
+      - { id: fantasy, label: Fantasy }
+      - { id: romance, label: Romance }
+      - { id: slice_of_life, label: Slice of Life }
+      - { id: action, label: Action }
+      - { id: adventure, label: Adventure }
+      - { id: comedy, label: Comedy }
+      - { id: drama, label: Drama }
+      - { id: horror, label: Horror }
+      - { id: mystery, label: Mystery }
+      - { id: thriller, label: Thriller }
+      - { id: sci_fi, label: Sci-Fi }
+      - { id: historical, label: Historical }
+      - { id: supernatural, label: Supernatural }
+      - { id: dark_fantasy, label: Dark Fantasy }
+      - { id: rpg, label: RPG }
+      - { id: story, label: Story }
+      - { id: wholesome, label: Wholesome }
+
+  - id: world_settings
+    label: World & setting
+    applies_to: [scene, scenario, card]
+    tags:
+      - { id: modern_city, label: Modern City }
+      - { id: college, label: College }
+      - { id: high_school, label: High School }
+      - { id: office, label: Office }
+      - { id: fantasy_kingdom, label: Fantasy Kingdom }
+      - { id: medieval, label: Medieval }
+      - { id: cyberpunk, label: Cyberpunk }
+      - { id: post_apocalyptic, label: Post-Apocalyptic }
+      - { id: dystopian, label: Dystopian }
+      - { id: small_town, label: Small Town }
+      - { id: village, label: Village }
+      - { id: royal_court, label: Royal Court }
+      - { id: space_opera, label: Space Opera }
+      - { id: alternate_universe, label: Alternate Universe }
+      - { id: isekai, label: Isekai }
+      - { id: paranormal, label: Paranormal }
+
+  - id: roleplay_format
+    label: Roleplay format
+    applies_to: [scene]
+    tags:
+      - { id: roleplay, label: Roleplay }
+      - { id: pov, label: POV }
+      - { id: first_person, label: First Person }
+      - { id: third_person, label: Third Person }
+      - { id: any_pov, label: Any POV }
+      - { id: multiple_characters, label: Multiple Characters }
+      - { id: group_chat, label: Group Chat }
+      - { id: interactive_story, label: Interactive Story }
+      - { id: choose_your_own_adventure, label: Choose Your Own Adventure }
+      - { id: narrative, label: Narrative }
+      - { id: long_form_story, label: Long-Form Story }
+
+  - id: story_situations
+    label: Story situation
+    applies_to: [scene, scenario, card]
+    tags:
+      - { id: meet_cute, label: Meet-Cute }
+      - { id: unexpected_encounter, label: Unexpected Encounter }
+      - { id: forced_proximity, label: Forced Proximity }
+      - { id: roommates, label: Roommates }
+      - { id: road_trip, label: Road Trip }
+      - { id: stuck_together, label: Stuck Together }
+      - { id: secret_identity, label: Secret Identity }
+      - { id: rescue, label: Rescue }
+      - { id: reunion, label: Reunion }
+      - { id: confession, label: Confession }
+      - { id: betrayal, label: Betrayal }
+      - { id: revenge, label: Revenge }
+      - { id: investigation, label: Investigation }
+      - { id: survival, label: Survival }
+
+  - id: conversation_mood
+    label: Conversation mood
+    applies_to: [scene, card]
+    tags:
+      - { id: comfort, label: Comfort }
+      - { id: fluff, label: Fluff }
+      - { id: angst, label: Angst }
+      - { id: drama, label: Drama }
+      - { id: tension, label: Tension }
+      - { id: slow_burn, label: Slow Burn }
+      - { id: banter, label: Banter }
+      - { id: humor, label: Humor }
+      - { id: emotional, label: Emotional }
+      - { id: immersive, label: Immersive }
+      - { id: character_development, label: Character Development }
+      - { id: plot_driven, label: Plot-Driven }

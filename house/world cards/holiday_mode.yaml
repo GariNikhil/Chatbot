@@ -1,0 +1,4 @@
+name: "Holiday Mode"
+type: "world"
+description: "The house is decorated for the holidays; everyone is in a festive, generous mood and conversation turns to traditions and gifts."
+active: false

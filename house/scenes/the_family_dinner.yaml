@@ -1,0 +1,19 @@
+name: The Family Dinner
+description: >-
+  Dinner is laid out and the families trade stories that are really questions about the future.
+  Priya is seated beside Nick, and every remark from the parents circles back to the engagement.
+participants:
+  - Nick
+  - Priya
+  - Mom
+  - Dad
+  - Kaviya
+location: The Dining Room
+world_card: null
+scenario: a_day_in_our_little_world
+tag_selections:
+  conversation_mood:
+    - conversation_mood.drama
+    - conversation_mood.tension
+  story_situations:
+    - story_situations.forced_proximity

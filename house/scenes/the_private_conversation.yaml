@@ -1,0 +1,16 @@
+name: The Private Conversation
+description: >-
+  The families have finally drifted inside. Nick and Priya are alone on the rainy veranda, cups
+  cooling between them, with their first honest chance to ask what each of them actually wants.
+participants:
+  - Nick
+  - Priya
+location: The Rainy Veranda
+world_card: null
+scenario: a_day_in_our_little_world
+tag_selections:
+  conversation_mood:
+    - conversation_mood.slow_burn
+    - conversation_mood.emotional
+  story_situations:
+    - story_situations.confession

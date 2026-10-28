@@ -1,0 +1,28 @@
+name: The Living Room
+description: >-
+  A softly lit living room with a comfortable sofa, a low coffee table, blankets, and a television
+  playing quietly. The room feels especially inviting after a long day.
+participants:
+  - Alex
+  - Dad
+  - Mom
+  - Nick
+  - Soniya
+  - Kaviya
+  - Priya
+  - Jordan
+location: Living Room
+world_card: null
+scenario: a_day_in_our_little_world
+tag_selections: {}
+tags:
+  - home
+  - cozy
+  - everyday
+  - romance
+interactions:
+  - Watching movies
+  - playful teasing
+  - sharing snacks
+  - falling asleep on the sofa
+  - heartfelt conversations

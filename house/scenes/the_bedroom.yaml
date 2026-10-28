@@ -1,0 +1,22 @@
+name: The Bedroom
+description: >-
+  A quiet bedroom with soft bedding, a bedside lamp, curtains, and a window overlooking the city.
+  The peaceful atmosphere encourages honest conversations and moments of vulnerability.
+participants:
+  - Nick
+  - Kaviya
+  - Jordan
+location: Bedroom
+world_card: null
+scenario: a_day_in_our_little_world
+tags:
+  - private
+  - comfort
+  - late-night
+  - intimacy
+interactions:
+  - Late-night talks
+  - comforting someone after a difficult day
+  - reading together
+  - sleepy conversations
+  - discussing feelings and boundaries
